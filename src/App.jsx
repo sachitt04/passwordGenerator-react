@@ -1,9 +1,4 @@
-import { useCallback, useState } from 'react'
-
-
-
-
-
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 function App() {
 
@@ -11,6 +6,11 @@ function App() {
 const [numAllowd,setNumAllowed] = useState(false)
 const [charAllowed,setCharAllowed] = useState(false)
 const [password,setPassword] = useState("")
+
+
+// useRef hook
+const passwordRef = useRef(null)
+
 
 // now lets make a password generator
 
@@ -28,6 +28,16 @@ const passwordGenerator = useCallback(()=>{
   }
   setPassword(pass)
 },[length,numAllowd,charAllowed,setPassword])
+
+
+useEffect(()=>{
+  passwordGenerator()
+
+},[length,numAllowd,charAllowed,passwordGenerator])
+
+const copyPasswordToclip = useCallback(()=>{
+  window.navigator.clipboard.writeText(password)
+},[password])
    
 
   return (
@@ -40,10 +50,12 @@ const passwordGenerator = useCallback(()=>{
         value={password}
         className='outline-none w-full py-1 px-3'
         placeholder='password'
-        readOnly />
+        readOnly
+        ref={passwordRef} />
 
         <button className='outline-none bg-blue-700 
-        text-white px-3 py-0.5 shrink-0'>copy</button>
+        text-white px-3 py-0.5 shrink-0'
+        onClick={copyPasswordToclip}>copy</button>
 
 
       </div>
@@ -80,7 +92,7 @@ const passwordGenerator = useCallback(()=>{
             setCharAllowed((prev)=> !prev)
           }}/>
 
-          <label htmlFor="charInput"></label>
+          <label htmlFor="charInput">Characters</label>
         </div>
 
 
